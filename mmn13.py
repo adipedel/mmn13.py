@@ -47,9 +47,8 @@ def shift_k_right(lst,k):
             if j==0:
                 lst[0] = lst[-1]        #updating the first item to have the value of the last one
             else:
-                temp = lst[j]           #saving the value of the item on the list so we won't overwrite it.
-                lst[j] = previous_num   #updating the item to have the value of the last one we saved
-                previous_num = temp     #saving the previous value of the item for the next item
+                lst[j],previous_num = previous_num,lst[j]
+#updating the item to have the value of the last one we saved and updating previous_num to the value of the item right now
     return lst
 
 """
