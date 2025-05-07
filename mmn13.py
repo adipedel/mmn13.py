@@ -68,3 +68,34 @@ def shift_right_size(a,b):
         if a == b:                  #if after the change the lists are equal, the function returns True
             return i
     return None                 #we finished the loop without the lists being equal. returning False
+
+"""
+is_perfect is a function that receives a list of numbers. it starts with the number 0 and checks for the value
+in list[0], it takes the value and checks what's the value in that index on the list and so on. the function checks
+if by doing that we can reach each index on the list and finish in index 0. It does it with a while loop that runs no
+more times than the list length. If the loop detects the value 0 before we went through all the indexes we will
+return False, and if we exited the loop and the value isn't 0 we will return False. In an other case, the list is
+perfect and we will return True.
+"""
+def is_perfect(lst):
+    if len(lst) == 0:   #an empty list is a perfect list
+        return True
+    value = 0
+    i = 0
+    while i < len(lst)-1:       #number of times the loop runs should be the length of the list
+        try:
+            value = lst[value]      #going to the index that is the value in lst[0]
+            if value == 0:          #if value is 0 and we didn't exit the loop, we didn't go through all the indexes
+                return False
+            i += 1
+        except IndexError as err:       #error could be a value that is not in the index range of the list
+            print (f"Error detected: {err}")
+            break
+        except TypeError as err:        #error could be a value that is not an integer
+            print(f"Error detected: {err}")
+            break
+    value = lst[value]
+    if value == 0:            #if value==0, we went through every index in the list and finished in the correct index
+        return True
+    else:
+        return False
