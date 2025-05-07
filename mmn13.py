@@ -32,3 +32,40 @@ def complement(lst):
             if i == list_len:                #the number is not on the list
                 new_lst.append(number)      #adding the number to the new list
     return new_lst
+
+"""
+shift_k_right is a function that receives a list of numbers and a number k. it does a shift right k times using a
+ loop that runs k times. on each loop it goes through the list a replaces the value of list[i] with the value of
+ list[i-1]. The function returns the updated list.
+ """
+def shift_k_right(lst,k):
+    if k < 0 or k > len(lst):
+        raise ValueError("k must be between 0 and the length of the list.")
+    previous_num = lst[0]        # saving the value of the first item on the list so we won't overwrite it.
+    for i in range(0,k):        #the outer loop for the shift right to be done k times
+        for j in range(len(lst)):       #the inner loop that goes through the list
+            if j==0:
+                lst[0] = lst[-1]        #updating the first item to have the value of the last one
+            else:
+                temp = lst[j]           #saving the value of the item on the list so we won't overwrite it.
+                lst[j] = previous_num   #updating the item to have the value of the last one we saved
+                previous_num = temp     #saving the previous value of the item for the next item
+    return lst
+
+"""
+shift_right_size is a function that receives 2 list a,b. by using the function shift_k_right it checks if after
+doing shift right on list b the 2 lists are equal. it does it by sending the list b and the number 1 to the function
+and each time checks if a and the updated b list are equal. the function calls the function up to the number of the 
+ length of the list (after that b list resets). the function returns True if it possible to make the lists equal
+ by using the function, and False if its not possible.
+ """
+def shift_right_size(a,b):
+    if len(a) != len(b):    #if the lists lengths are different they can never be equal
+        return None
+    if a == b:              #if the list are already equal we will return True
+        return True
+    for i in range (1,len(b)):          #a loop so we will call the function up to the number of the length of the list
+        shift_k_right(b,1)          #calling the function with b and 1 (doing shift right 1)
+        if a == b:                  #if after the change the lists are equal, the function returns True
+            return i
+    return None                 #we finished the loop without the lists being equal. returning False
