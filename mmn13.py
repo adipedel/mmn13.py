@@ -99,3 +99,48 @@ def is_perfect(lst):
         return True
     else:
         return False
+
+"""
+identity_matrix is a function that receives a matrix and checks if it's an identity matrix.
+It does this using nested loops over the rows and columns. It checks that all elements on the main diagonal are 1,
+and all other elements are 0. The function returns True if the matrix is an identity matrix, and False otherwise.
+"""
+def identity_matrix(mat):
+    mat_size = len(mat)      # the number of rows (and columns) in the square matrix
+    for row in mat:
+        if len(row) != mat_size:        #checks if the matrix is square
+            raise IndexError("Not all rows are equal")
+    for row in range (mat_size):              #loop over rows
+        for column in range (mat_size):        #loop over column
+            if type(mat[row][column]) != int:
+                raise TypeError("Not all values are int")
+            if (row == column and mat[row][column] != 1) or (row != column and mat[row][column] != 0):
+                # check that diagonal elements are 1 and all others are 0
+                return False
+    return True
+
+""" 
+create_sub_matrix is a function that receives a matrix and a size that is less than or equal to the size of the matrix,
+and creates a sub-matrix of that size from the given matrix. The function first calculates the size of the matrix and 
+then the difference between the matrix size and the given size. It creates a new matrix by trimming half of the 
+difference from each side of the matrix. The function returns the new sub-matrix.
+"""
+def create_sub_matrix(mat, size):
+    mat_len = len(mat)
+    sub_mat = []                #create the new matrix (with a two-dimensional list)
+    for row in mat:
+        if len(row) != mat_len:         # check that the matrix is square
+            raise IndexError("Not all rows are equal")
+    size_difference = mat_len - size
+    if size_difference == 0:                #if sizes are equal, return the original matrix
+        return mat
+    else:
+        sub_mat_row = 0
+        for row in range (size_difference//2, mat_len-size_difference//2):
+            # we add rows to the new matrix, skipping half of the size difference from top and bottom
+            sub_mat.append([])                  #create a new row in the sub-matrix
+            for column in range (size_difference//2, mat_len-size_difference//2):
+                # we add columns to the new row, skipping half of the size difference from left and right
+                sub_mat[sub_mat_row].append(mat[row][column])
+            sub_mat_row += 1
+    return sub_mat
