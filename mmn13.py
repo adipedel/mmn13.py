@@ -144,3 +144,24 @@ def create_sub_matrix(mat, size):
                 sub_mat[sub_mat_row].append(mat[row][column])
             sub_mat_row += 1
     return sub_mat
+
+"""
+max_identity_matrix is a function that receives a matrix and returns the size of the largest identity matrix
+that can be obtained by trimming the original matrix. It uses the identity_matrix function to check if the current
+matrix is an identity matrix, and the create_sub_matrix function to trim the matrix by 1 on each side.
+The function returns the size of the first identity matrix we identify.
+"""
+def max_identity_matrix(mat):
+    mat_len = len(mat)
+    while mat_len != 0:
+        try:
+            if identity_matrix(mat):        #if we identify an identity matrix, we will return the size of the matrix.
+                return mat_len
+            elif mat_len == 1:        #if the size of the matrix is 1, and it's not an identity matrix we will return 0
+                return 0
+            else:
+                mat = create_sub_matrix(mat, mat_len-2)         #trim the matrix by 1 on each side
+                mat_len = len(mat)                          #the trimmed matrix size
+        except (IndexError, TypeError) as err:
+            print (f"Error happened: {err}")
+            return 0
