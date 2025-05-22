@@ -1,24 +1,46 @@
 """
-Name: Adi Pedel
-Project: mmn13 contains 7 functions.
-1.complement receives a list of numbers and returns the natural numbers that are not on the list and are smaller
-than the max number in the received list.
-2.shift_k_right receives a list of number and a number k. it performs shift k right on the list.
-3.shift_right_size receives two lists of numbers and checks how many shift rights it takes to make them equal
-(if possible) using the shift_k_right function.
-4.is_perfect checks if doing a scan by cell values of the list will go through all the cells.
-5.identity_matrix receives a matrix (using a two-dimensional list) and checks if it's an identity matrix.
-6.create_sub_matrix receives a matrix and a size and returns a sub matrix with the received size (following the center of the matrix)
-7.max_identity_matrix receives a matrix and using the functions identity_matrix and create_sub_matrix, checks whats
-is thr max sub matrix that is a identity matrix(following the center of the matrix)
+Author: Adi Pedel
+Project: MMN13
+
+This module contains 7 functions that perform various operations on lists and matrices:
+
+1. complement(lst):
+   Receives a list of natural numbers and returns a list of the missing natural numbers
+   that are smaller than the maximum value in the input list.
+
+2. shift_k_right(lst, k):
+   Performs a right circular shift on the input list k times.
+
+3. shift_right_size(a, b):
+   Returns the number of right shifts required to make list b equal to list a using shift_k_right.
+   Returns None if it's not possible.
+
+4. is_perfect(lst):
+   Checks whether traversing the list using the values as indexes covers all elements
+   exactly once and returns to index 0.
+
+5. identity_matrix(mat):
+   Checks whether a given square matrix is an identity matrix (1s on the diagonal, 0s elsewhere).
+
+6. create_sub_matrix(mat, size):
+   Extracts a centered sub-matrix of the specified size from the given square matrix.
+
+7. max_identity_matrix(mat):
+   Finds the largest centered sub-matrix of the given matrix that is an identity matrix.
 """
 
-""""
-complement is a function that receives a list of natural numbers, it checks what is the max value in the list,
-and goes through every natural number up to that number and checks if it on the list. every number that is not on
-the list will be added to a new list. in the end the function will return the new list.
-"""
 def complement(lst):
+    """
+        Returns a list of natural numbers missing from the input list,
+        where missing numbers are all natural numbers less than the maximum value in lst.
+
+        Parameters:
+            lst (list of int): List of natural numbers.
+
+        Returns:
+            list of int: Sorted list of natural numbers not present in lst but less than max(lst).
+            Returns an empty list if input is empty.
+        """
     new_lst = []
     list_len = len(lst)
     if list_len == 0:                #empty list
@@ -33,12 +55,21 @@ def complement(lst):
                 new_lst.append(number)      #adding the number to the new list
     return new_lst
 
-"""
-shift_k_right is a function that receives a list of numbers and a number k. it does a shift right k times using a
- loop that runs k times. on each loop it goes through the list a replaces the value of list[i] with the value of
- list[i-1]. The function returns the updated list.
- """
+
 def shift_k_right(lst,k):
+    """
+        Performs a circular right shift on the list k times.
+
+        Parameters:
+            lst (list): List of elements to shift.
+            k (int): Number of times to shift right.
+
+        Returns:
+            list: The list after k right circular shifts.
+
+        Raises:
+            ValueError: If k is negative or greater than the length of lst.
+        """
     if k < 0 or k > len(lst):
         raise ValueError("k must be between 0 and the length of the list.")
     previous_num = lst[0]        # saving the value of the first item on the list so we won't overwrite it.
@@ -51,14 +82,18 @@ def shift_k_right(lst,k):
 #updating the item to have the value of the last one we saved and updating previous_num to the value of the item right now
     return lst
 
-"""
-shift_right_size is a function that receives 2 list a,b. by using the function shift_k_right it checks if after
-doing shift right on list b the 2 lists are equal. it does it by sending the list b and the number 1 to the function
-and each time checks if a and the updated b list are equal. the function calls the function up to the number of the 
- length of the list (after that b list resets). the function returns True if it possible to make the lists equal
- by using the function, and False if its not possible.
- """
+
 def shift_right_size(a,b):
+    """
+        Determines how many right circular shifts are needed on list b to match list a.
+
+        Parameters:
+            a (list): Target list.
+            b (list): List to be shifted.
+
+        Returns:
+            int or None: Number of shifts required to make b equal to a, or None if impossible.
+        """
     if len(a) != len(b):    #if the lists lengths are different they can never be equal
         return None
     if a == b:              #if the list are already equal we will return True
@@ -69,15 +104,18 @@ def shift_right_size(a,b):
             return i
     return None                 #we finished the loop without the lists being equal. returning False
 
-"""
-is_perfect is a function that receives a list of numbers. it starts with the number 0 and checks for the value
-in list[0], it takes the value and checks what's the value in that index on the list and so on. the function checks
-if by doing that we can reach each index on the list and finish in index 0. It does it with a while loop that runs no
-more times than the list length. If the loop detects the value 0 before we went through all the indexes we will
-return False, and if we exited the loop and the value isn't 0 we will return False. In an other case, the list is
-perfect and we will return True.
-"""
+
 def is_perfect(lst):
+    """
+        Checks if traversing indices using the values of the list visits all elements exactly once
+        and returns to the start index.
+
+        Parameters:
+            lst (list of int): List representing indices.
+
+        Returns:
+            bool: True if traversal visits every index once and returns to zero, False otherwise.
+        """
     if len(lst) == 0:   #an empty list is a perfect list
         return True
     value = 0
@@ -85,28 +123,38 @@ def is_perfect(lst):
     while i < len(lst)-1:       #number of times the loop runs should be the length of the list
         try:
             value = lst[value]      #going to the index that is the value in lst[0]
-            if value == 0:          #if value is 0 and we didn't exit the loop, we didn't go through all the indexes
+            if value == 0:          #if value is 0, and we didn't exit the loop, we didn't go through all the indexes
                 return False
             i += 1
         except IndexError as err:       #error could be a value that is not in the index range of the list
             print (f"Error detected: {err}")
-            break
+            return False
         except TypeError as err:        #error could be a value that is not an integer
             print(f"Error detected: {err}")
-            break
+            return False
     value = lst[value]
     if value == 0:            #if value==0, we went through every index in the list and finished in the correct index
         return True
     else:
         return False
 
-"""
-identity_matrix is a function that receives a matrix and checks if it's an identity matrix.
-It does this using nested loops over the rows and columns. It checks that all elements on the main diagonal are 1,
-and all other elements are 0. The function returns True if the matrix is an identity matrix, and False otherwise.
-"""
 def identity_matrix(mat):
+    """
+       Checks if a given matrix is an identity matrix.
+
+       Parameters:
+           mat (list of lists of int): Square matrix to check.
+
+       Returns:
+           bool: True if mat is an identity matrix, False otherwise.
+
+       Raises:
+           IndexError: If matrix rows are not equal length (not square).
+           TypeError: If any element in the matrix is not an integer.
+       """
     mat_size = len(mat)      # the number of rows (and columns) in the square matrix
+    if mat_size == 0:
+        return False            #empty matrix is not an identity matrix
     for row in mat:
         if len(row) != mat_size:        #checks if the matrix is square
             raise IndexError("Not all rows are equal")
@@ -119,13 +167,21 @@ def identity_matrix(mat):
                 return False
     return True
 
-""" 
-create_sub_matrix is a function that receives a matrix and a size that is less than or equal to the size of the matrix,
-and creates a sub-matrix of that size from the given matrix. The function first calculates the size of the matrix and 
-then the difference between the matrix size and the given size. It creates a new matrix by trimming half of the 
-difference from each side of the matrix. The function returns the new sub-matrix.
-"""
+
 def create_sub_matrix(mat, size):
+    """
+        Creates a centered sub-matrix of the specified size from the input square matrix.
+
+        Parameters:
+            mat (list of lists): Square matrix.
+            size (int): Desired size of the sub-matrix (must be <= size of mat).
+
+        Returns:
+            list of lists: Centered sub-matrix of dimension size x size.
+
+        Raises:
+            IndexError: If matrix rows are not equal length (not square).
+        """
     mat_len = len(mat)
     sub_mat = []                #create the new matrix (with a two-dimensional list)
     for row in mat:
@@ -145,23 +201,31 @@ def create_sub_matrix(mat, size):
             sub_mat_row += 1
     return sub_mat
 
-"""
-max_identity_matrix is a function that receives a matrix and returns the size of the largest identity matrix
-that can be obtained by trimming the original matrix. It uses the identity_matrix function to check if the current
-matrix is an identity matrix, and the create_sub_matrix function to trim the matrix by 1 on each side.
-The function returns the size of the first identity matrix we identify.
-"""
+
 def max_identity_matrix(mat):
+    """
+        Finds the size of the largest centered identity sub-matrix within the given matrix.
+
+        Parameters:
+            mat (list of lists): Square matrix to search.
+
+        Returns:
+            int: Size of the largest identity sub-matrix found, or 0 if none found.
+
+        Prints error messages and returns 0 on exceptions.
+        """
     mat_len = len(mat)
     while mat_len != 0:
         try:
-            if identity_matrix(mat):        #if we identify an identity matrix, we will return the size of the matrix.
+            if identity_matrix(mat):  # if we identify an identity matrix, we will return the size of the matrix.
                 return mat_len
-            elif mat_len == 1:        #if the size of the matrix is 1, and it's not an identity matrix we will return 0
+            elif mat_len == 1:  # if the size of the matrix is 1, and it's not an identity matrix we will return 0
                 return 0
             else:
-                mat = create_sub_matrix(mat, mat_len-2)         #trim the matrix by 1 on each side
-                mat_len = len(mat)                          #the trimmed matrix size
+                mat = create_sub_matrix(mat, mat_len - 2)  # trim the matrix by 1 on each side
+                mat_len = len(mat)  # the trimmed matrix size
         except (IndexError, TypeError) as err:
-            print (f"Error happened: {err}")
+            print(f"Error happened: {err}")
             return 0
+    return None
+
